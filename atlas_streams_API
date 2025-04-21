@@ -1,0 +1,45 @@
+# Get Atlas Streams VPC info
+
+curl \
+-s --user "username:password" \
+--digest \
+--header 'Accept: application/vnd.atlas.2024-11-13+json' \
+--header 'Content-Type: application/json' \
+--request GET "https://cloud.mongodb.com/api/atlas/v2/groups/PROJECT_ID/streams/accountDetails?cloudProvider=AWS&regionName=US_EAST_2"
+
+# RESPONSE: {"awsAccountId":"755936493689","cidrBlock":"192.168.248.0/21","vpcId":"vpc-0e48d8f97a8800c3d"}
+
+#Check peering status:
+
+curl \
+-s --user "username:password" \
+--digest \
+--header 'Accept: application/vnd.atlas.2023-02-01+json' \
+--header 'Content-Type: application/json' \
+--request GET \
+"https://cloud.mongodb.com/api/atlas/v2/groups/PROJECT_ID/streams/vpcPeeringConnections?requesterAccountId=908027390566&pretty=true"
+
+# RESPONSE: 
+{"links":[{"href":"https://cloud.mongodb.com/api/atlas/v2/groups/67d37d12e6611b2ed7c2d37c/streams/vpcPeeringConnections?requesterAccountId=121194963621&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"_id":"68052de5adfb154fff59281f","accepterAccountId":"385224097175","accepterVpcId":"vpc-08d5156cb46d6ce3d","cloudStatus":"pending-acceptance","expirationTime":"2025-04-27T17:23:20Z","groupId":"67d37d12e6611b2ed7c2d37c","localStatus":"NONE","name":"pcx-0034dcf61bcca2574","requesterAccountId":"121194963621","requesterCidr":"172.16.0.0/27","requesterVpcId":"vpc-0f1cd2be2e9027c3c"}],"totalCount":1}%
+
+# Accept peering request from Confluent
+
+curl \
+-s --user "username:password" \
+--digest \
+--header 'Accept: application/vnd.atlas.2023-02-01+json' \
+--header 'Content-Type: application/json' \
+-d '{"requesterVpcId": "vpc-01b096773bdca9a1e", "requesterAccountId":"908027390566"}' \
+--request POST \
+"https://cloud.mongodb.com/api/atlas/v2/groups/PROJECT_ID/streams/vpcPeeringConnections/pcx-id:accept"
+
+# Delete peering connection
+
+curl \
+-s --user "username:password" \
+--digest \
+--header 'Accept: application/vnd.atlas.2023-02-01+json' \
+--header 'Content-Type: application/json' \
+-d '{"requesterVpcId": "vpc-0f1cd2be2e9027c3c", "requesterAccountId":"121194963621"}' \
+--request DELETE \
+"https://cloud.mongodb.com/api/atlas/v2/groups/PROJECT_ID/streams/vpcPeeringConnections/pcx-id"
