@@ -40,6 +40,5 @@ curl \
 --digest \
 --header 'Accept: application/vnd.atlas.2023-02-01+json' \
 --header 'Content-Type: application/json' \
--d '{"requesterVpcId": "vpc-0f1cd2be2e9027c3c", "requesterAccountId":"121194963621"}' \
 --request DELETE \
-"https://cloud.mongodb.com/api/atlas/v2/groups/PROJECT_ID/streams/vpcPeeringConnections/pcx-id"
+"https://cloud.mongodb.com/api/atlas/v2/groups/PROJECT_ID/streams/vpcPeeringConnections/PCX_ID"
